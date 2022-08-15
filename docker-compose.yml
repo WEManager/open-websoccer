@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  apache:
+    build: .
+    container_name: application
+    restart: always
+    ports:
+      - 3030:80
+    volumes:
+      - .:/var/www/html
+    networks:
+      - app
+
+  mariadb:
+    image: mariadb
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: opensoccer
+      MYSQL_DATABASE: opensoccer
+    networks:
+      - app
+    restart: on-failure
+    volumes:
+     - ./mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+networks:    
+  app:
+    driver: bridge
