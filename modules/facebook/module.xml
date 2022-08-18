@@ -19,7 +19,7 @@
         <block
             id="facebook-login-sidebar"
             template="facebookloginbox"
-            model="FacebookLoginModel"
+            model="App\\Classes\\Models\\FacebookLoginModel"
             includepages="all"
             area="sidebar"
             weight="1"

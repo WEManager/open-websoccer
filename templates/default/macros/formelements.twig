@@ -45,7 +45,7 @@
 {% endmacro %}
 
 {% macro checkbox(fieldId, label, value, colspan=false, errormsg = null) %}
-<div class="control-group{% if errormsg|length > 0 %} error{% endif %}"">
+<div class="control-group{% if errormsg|length > 0 %} error {% endif %}">
 	{% if colspan == false %}<div class="controls">{% endif %}
 	
 	    <label class="checkbox">
@@ -99,23 +99,26 @@
   	<span>{{ i18n.getMessage("unit_percent") }}</span>
 {% endmacro %}
 
-{% macro teamPlayerSelection(fieldId, label, selectedPlayer = null, positionsAndPlayers) %}
+{# TODO: {% macro teamPlayerSelection(fieldId, label, selectedPlayer = null, positionsAndPlayers) %}
+	<div class="control-group">
+		<label class="control-label" for="{{ fieldId }}">
+			{{ label }}
+		</label>
 
-<div class="control-group">
-	<label class="control-label" for="{{ fieldId }}">
-		{{ label }}
-	</label>
-	<div class="controls">
-		<select name="{{ fieldId }}" id="{{ fieldId }}">
-			<option></option>
-			{% for position,players in positionsAndPlayers %}
-				<optgroup label="{{ i18n.getMessage("player_position_" ~ position) }}">
-				{% for player in players if player.transfermarket != "1" %}
-					<option value="{{ player.id }}" {% if selectedPlayer == player.id  %} selected{% endif %}>{{ player.firstname }} {% if player.pseudonym|length > 0 %}&quot;{{ player.pseudonym }}&quot; {% endif %}{{ player.lastname }}{% if player.position_main|length > 0 %} ({{ i18n.getMessage("player_mainposition_" ~ player.position_main) }}){% endif %}</option>
+		<div class="controls">
+			<select name="{{ fieldId }}" id="{{ fieldId }}">
+				<option></option>
+
+				{% for position,players in positionsAndPlayers %}
+					<optgroup label="{{ i18n.getMessage("player_position_" ~ position) }}">
+						{% for player in players if player.transfermarket != "1" %}
+							<option value="{{ player.id }}" {% if selectedPlayer == player.id  %} selected {% endif %}>
+								{{ player.firstname }} {% if player.pseudonym|length > 0 %} &quot; {{ player.pseudonym }} &quot; {% endif %} {{ player.lastname }} {% if player.position_main|length > 0 %} ({{ i18n.getMessage("player_mainposition_" ~ player.position_main) }}){% endif %}
+							</option>
+						{% endfor %}
+					</optgroup>
 				{% endfor %}
-				</optgroup>
-			{% endfor %}
-		</select>
+			</select>
+		</div>
 	</div>
-</div>
-{% endmacro %}
+{% endmacro %} #}

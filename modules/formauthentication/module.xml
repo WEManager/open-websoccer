@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE module SYSTEM "../module.dtd">
 <module version="1.0.0">
-
     <dependencies>
         <dependency module="userauthentication" version="1.0.0" />
         <dependency module="userregistration" version="1.0.0" />
@@ -27,7 +26,6 @@
     </pages>    
     
     <blocks>
-
         <block
             id="login-form"
             template="userlogin"
@@ -36,7 +34,6 @@
             area="sidebar"
             weight="0"
             role="guest" />
-        
     </blocks>
     
   <settings>
@@ -61,5 +58,4 @@
 		<param id="key" type="text" required="true" />
 	</action>
   </actions>
-
 </module>

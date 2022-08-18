@@ -14,7 +14,7 @@
         <block
             id="ads_sidebar"
             template="ads_sidebar"
-            model="AdsModel"
+            model="App\\Classes\\Models\\AdsModel"
             includepages="all"
             area="sidebar"
             weight="10"
@@ -23,7 +23,7 @@
         <block
             id="ads_top"
             template="ads_top"
-            model="AdsModel"
+            model="App\\Classes\\Models\\AdsModel"
             includepages="all"
             area="content_top"
             weight="-10"
@@ -32,7 +32,7 @@
         <block
             id="ads_bottom"
             template="ads_bottom"
-            model="AdsModel"
+            model="App\\Classes\\Models\\AdsModel"
             includepages="all"
             area="content_bottom"
             weight="10"

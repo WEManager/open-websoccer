@@ -15,7 +15,9 @@
  * under the License.
  */
 
-require_once "base_facebook.php";
+namespace App\Classes\FacebookSDK;
+
+// require_once "base_facebook.php";
 
 /**
  * Extends the BaseFacebook class with the intent of using

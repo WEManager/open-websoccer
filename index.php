@@ -1,24 +1,19 @@
 <?php
-/******************************************************
 
-  This file is part of OpenWebSoccer-Sim.
+use App\Classes\AccessDeniedException;
+use App\Classes\ActionHandler;
+use App\Classes\BreadcrumbBuilder;
+use App\Classes\FrontMessage;
+use App\Classes\NavigationBuilder;
+use App\Classes\PageIdRouter;
+use App\Classes\ViewHandler;
+use App\Classes\WebSoccer;
 
-  OpenWebSoccer-Sim is free software: you can redistribute it 
-  and/or modify it under the terms of the 
-  GNU Lesser General Public License 
-  as published by the Free Software Foundation, either version 3 of
-  the License, or any later version.
+require_once __DIR__ . '/vendor/autoload.php';
 
-  OpenWebSoccer-Sim is distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied
-  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-  See the GNU Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public 
-  License along with OpenWebSoccer-Sim.  
-  If not, see <http://www.gnu.org/licenses/>.
-
-******************************************************/
+$whoops = new \Whoops\Run;
+$whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+$whoops->register();
 
 define('BASE_FOLDER', __DIR__);
 
@@ -55,17 +50,21 @@ if ($website->getConfig('offline') == 'offline') {
 
 if ($isOffline) {
 	$parameters['offline_message'] = nl2br($website->getConfig('offline_text'));
+
 	echo $website->getTemplateEngine($i18n)->loadTemplate('views/offline')->render($parameters);
-	
-	// show page
 } else {
-	
 	// check once per session if a new badge for user is applicable
-	if (!isset($_SESSION['badgechecked']) && $website->getUser()->getRole() == ROLE_USER
-			&& $website->getUser()->getClubId($website, $db)) {
+	if (
+		!isset($_SESSION['badgechecked']) &&
+		$website->getUser()->getRole() == ROLE_USER &&
+		$website->getUser()->getClubId($website, $db)
+	) {
 		$userId = $website->getUser()->id;
+
 		$result = $db->querySelect('datum_anmeldung', $website->getConfig('db_prefix') . '_user', 'id = %d', $userId);
+
 		$userinfo = $result->fetch_array();
+
 		$result->free();
 		
 		// consider only users who have a registration date (in particular manually created users might not have).
@@ -79,16 +78,21 @@ if ($isOffline) {
 	
 	// get page ID and parse it by router
 	$pageId = $website->getRequestParameter(PARAM_PAGE);
+
 	$pageId = PageIdRouter::getTargetPageId($website, $i18n, $pageId);
+
 	$website->setPageId($pageId);
 	
 	$validationMessages = null;
 	
 	// handle action
 	$actionId = $website->getRequestParameter(PARAM_ACTION);
+	
 	if ($actionId !== NULL) {
 		try {
+			
 			$targetId = ActionHandler::handleAction($website, $db, $i18n, $actionId);
+			
 			if ($targetId != null) {
 				$pageId = $targetId;
 			}
@@ -117,15 +121,13 @@ if ($isOffline) {
 	// get and render target page
 	header('Content-type: text/html; charset=utf-8');
 	$viewHandler = new ViewHandler($website, $db, $i18n, $page, $block, $validationMessages);
+
 	try {
 		echo $viewHandler->handlePage($pageId, $parameters);
 	} catch (AccessDeniedException $e) {
-		
-		// show log-in form for user
 		if ($website->getUser()->getRole() == ROLE_GUEST) {
-			$website->addFrontMessage(new FrontMessage(MESSAGE_TYPE_ERROR,
-					$e->getMessage(),
-					''));
+			$website->addFrontMessage(new FrontMessage(MESSAGE_TYPE_ERROR, $e->getMessage(), ''));
+
 			echo $viewHandler->handlePage('login', $parameters);
 		} else {
 			renderErrorPage($website, $i18n, $viewHandler, $e->getMessage(), $parameters);
@@ -135,10 +137,10 @@ if ($isOffline) {
 	}
 }
 
-function renderErrorPage($website, $i18n, $viewHandler, $message, $parameters) {
+function renderErrorPage(WebSoccer $website, $i18n, $viewHandler, $message, $parameters) {
 	$parameters['title'] = $message;
+
 	$parameters['message'] = '';
+
 	echo $website->getTemplateEngine($i18n, $viewHandler)->loadTemplate('error')->render($parameters);
 }
-
-?>

@@ -98,4 +98,3 @@ if ($website->getRequestParameter('contentonly')) {
 	
 	echo json_encode($output);
 }
-?>

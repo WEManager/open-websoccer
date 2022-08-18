@@ -1,24 +1,11 @@
 <?php
-/******************************************************
+namespace App\admin\config;
 
-  This file is part of OpenWebSoccer-Sim.
-
-  OpenWebSoccer-Sim is free software: you can redistribute it 
-  and/or modify it under the terms of the 
-  GNU Lesser General Public License 
-  as published by the Free Software Foundation, either version 3 of
-  the License, or any later version.
-
-  OpenWebSoccer-Sim is distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied
-  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-  See the GNU Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public 
-  License along with OpenWebSoccer-Sim.  
-  If not, see <http://www.gnu.org/licenses/>.
-
-******************************************************/
+use App\Classes\DbConnection;
+use App\Classes\DbSessionManager;
+use App\Classes\FileWriter;
+use App\Classes\WebSoccer;
+use Exception;
 
 define('DEBUG', FALSE);
 
@@ -30,7 +17,6 @@ if (DEBUG) {
 
 // loads required classes on demand
 function classes_autoloader($class) {
-	
 	$subforder = '';
 	
 	if (substr($class, -9) === 'Converter') {
@@ -57,7 +43,6 @@ function classes_autoloader($class) {
 	
 	@include(BASE_FOLDER . '/classes/' . $subforder . $class . '.class.php');
 }
-spl_autoload_register('classes_autoloader');
 
 // constants
 define('FOLDER_MODULES', BASE_FOLDER . '/modules');
@@ -89,6 +74,7 @@ $block = null;
 // init application
 try {
 	$website = WebSoccer::getInstance();
+
 	if (!file_exists(CONFIGCACHE_FILE_FRONTEND)) {
 		$website->resetConfigCache();
 	}
@@ -108,10 +94,11 @@ try {
 // connect to DB
 try {
 	$db = DbConnection::getInstance();
+
 	$db->connect($website->getConfig('db_host'),
-			$website->getConfig('db_user'),
-			$website->getConfig('db_passwort'),
-			$website->getConfig('db_name'));
+		$website->getConfig('db_user'),
+		$website->getConfig('db_passwort'),
+		$website->getConfig('db_name'));
 } catch(Exception $e) {
 	// write to log
 	try {
@@ -126,6 +113,7 @@ try {
 
 // register own session handler
 $handler = new DbSessionManager($db, $website);
+
 session_set_save_handler(
 	array($handler, 'open'),
 	array($handler, 'close'),
@@ -146,5 +134,3 @@ try {
 } catch (Exception $e) {
 	// do not set time zone. This Exception can appear in particular when updating from older version.
 }
-
-?>

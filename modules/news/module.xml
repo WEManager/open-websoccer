@@ -54,7 +54,7 @@
         <block
             id="news"
             template="topnews"
-            model="TopNewsListModel"
+            model="App\\Classes\\Models\\TopNewsListModel"
             includepages="home"
             area="custom"
             weight="0"

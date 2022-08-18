@@ -18,7 +18,7 @@
        <block
             id="googleplus-login-sidebar"
             template="googleplusloginbox"
-            model="GoogleplusLoginModel"
+            model="App\\Classes\\Models\\GoogleplusLoginModel"
             includepages="all"
             area="sidebar"
             weight="1"

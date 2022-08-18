@@ -1,24 +1,6 @@
 <?php
-/******************************************************
 
-  This file is part of OpenWebSoccer-Sim.
-
-  OpenWebSoccer-Sim is free software: you can redistribute it 
-  and/or modify it under the terms of the 
-  GNU Lesser General Public License 
-  as published by the Free Software Foundation, either version 3 of
-  the License, or any later version.
-
-  OpenWebSoccer-Sim is distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied
-  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-  See the GNU Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public 
-  License along with OpenWebSoccer-Sim.  
-  If not, see <http://www.gnu.org/licenses/>.
-
-******************************************************/
+use App\Classes\I18n;
 
 define('PARAM_ACTION', 'action');
 define('PARAM_PAGE', 'page');
@@ -33,17 +15,22 @@ include(CONFIGCACHE_FILE_FRONTEND);
 
 // log-in user
 $authenticatorClasses = explode(',', $website->getConfig('authentication_mechanism'));
+
 foreach ($authenticatorClasses as $authenticatorClass) {
 	$authenticatorClass = trim($authenticatorClass);
+
 	if (!class_exists($authenticatorClass)) {
 		throw new Exception('Class not found: ' . $authenticatorClass);
 	}
+
 	$authenticator = new $authenticatorClass($website);
+
 	$authenticator->verifyAndUpdateCurrentUser($website->getUser());
 }
 
 // load i18n messages
 $i18n = I18n::getInstance($website->getConfig('supported_languages'));
+
 if ($website->getUser()->language != null) {
 	try {
 		$i18n->setCurrentLanguage($website->getUser()->language);
@@ -51,7 +38,6 @@ if ($website->getUser()->language != null) {
 		// ignore and use default language
 	}
 }
+
 include(sprintf(CONFIGCACHE_MESSAGES, $i18n->getCurrentLanguage()));
 include(sprintf(CONFIGCACHE_ENTITYMESSAGES, $i18n->getCurrentLanguage()));
-
-?>

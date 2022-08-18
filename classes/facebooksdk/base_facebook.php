@@ -15,6 +15,10 @@
  * under the License.
  */
 
+namespace App\Classes\FacebookSDK;
+
+use Exception;
+
 if (!function_exists('curl_init')) {
   throw new Exception('Facebook needs the CURL PHP extension.');
 }
